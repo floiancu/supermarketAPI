@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Integer> {
+public interface ItemRepository extends JpaRepository<Item, UUID> {
 
     List<Item> findAllByNameIn(final List<String> itemNames);
 }
