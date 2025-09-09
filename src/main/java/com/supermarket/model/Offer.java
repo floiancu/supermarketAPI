@@ -3,6 +3,7 @@ package com.supermarket.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -14,4 +15,6 @@ public class Offer {
         UUID  id;
         Double price;
         int quantity;
+        LocalDate startDate;
+        LocalDate endDate;
 }

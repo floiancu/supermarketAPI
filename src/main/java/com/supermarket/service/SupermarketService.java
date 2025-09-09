@@ -21,11 +21,11 @@ public class SupermarketService {
     public Double checkout(final List<String> basketContents) {
         Map<String, Long> itemsAndQuantitiesInBasket = basketContents.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        List<Item> items = itemRepository.findAllByNameIn(new ArrayList<>(itemsAndQuantitiesInBasket.keySet()));
+        List<Item> items = itemRepository.findAllByNameInIgnoreCase(new ArrayList<>(itemsAndQuantitiesInBasket.keySet()));
         if(items.size() != itemsAndQuantitiesInBasket.size()) {
-            List<String> foundItems = items.stream().map(Item::getName).toList();
+            List<String> foundItems = items.stream().map(item -> item.getName().toLowerCase()).toList();
             throw new SupermarketException(String.format("Item(s) not found: %s", itemsAndQuantitiesInBasket.keySet().stream()
-                    .filter(item -> !foundItems.contains(item))
+                    .filter(item -> !foundItems.contains(item.toLowerCase()))
                     .collect(Collectors.joining(", "))));
         }
         return itemsAndQuantitiesInBasket.entrySet().stream().map(itemAndQuantity -> getPrice(itemAndQuantity, items)).reduce(0.0, Double::sum);
