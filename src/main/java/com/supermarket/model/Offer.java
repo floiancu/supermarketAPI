@@ -1,6 +1,7 @@
 package com.supermarket.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Table(name = "Offers")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Offer {
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)

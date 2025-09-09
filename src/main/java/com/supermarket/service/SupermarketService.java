@@ -2,10 +2,12 @@ package com.supermarket.service;
 
 import com.supermarket.exception.SupermarketException;
 import com.supermarket.model.Item;
+import com.supermarket.model.Offer;
 import com.supermarket.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +36,14 @@ public class SupermarketService {
     private Double getPrice(Map.Entry<String, Long> itemAndQuantity, List<Item> items) {
         Map<String, Item> mappedItems = items.stream().collect(Collectors.toUnmodifiableMap(item -> item.getName().toLowerCase(), Function.identity()));
         Item item = mappedItems.get(itemAndQuantity.getKey().trim().toLowerCase());
-        return (item.getOffer() == null) ?
-                itemAndQuantity.getValue() * item.getPrice()
-                : (itemAndQuantity.getValue() / item.getOffer().getQuantity()) * item.getOffer().getPrice() +
-                itemAndQuantity.getValue() % item.getOffer().getPrice() * item.getPrice();
+        return (item.getOffer() != null && isOfferValidToday(item.getOffer())) ?
+                (itemAndQuantity.getValue() / item.getOffer().getQuantity()) * item.getOffer().getPrice() +
+                itemAndQuantity.getValue() % item.getOffer().getQuantity() * item.getPrice()
+                : itemAndQuantity.getValue() * item.getPrice();
+    }
+
+    private boolean isOfferValidToday(Offer offer) {
+        return !LocalDate.now().isAfter(offer.getEndDate())
+                && !LocalDate.now().isBefore(offer.getStartDate());
     }
 }
