@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import util.TestUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_oneItem_ok() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0, null)))
+        doReturn(List.of(TestUtils.buildApple()))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("apple"));
 
         assertEquals(10, supermarketService.checkout(List.of("apple")));
@@ -37,7 +38,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_twoItems_ok() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0, null)))
+        doReturn(List.of(TestUtils.buildApple()))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("apple"));
 
         assertEquals(20, supermarketService.checkout(List.of("apple", "apple")));
@@ -45,7 +46,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_twoDifferentItems_ok() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0, null),
+        doReturn(List.of(TestUtils.buildApple(),
                 new Item(UUID.randomUUID(), "Banana", 30.0, null)))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("banana", "apple"));
 
@@ -54,8 +55,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_itemsOnOffer_ok() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0,
-                new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusDays(3), LocalDate.now().plusDays(3)))))
+        doReturn(List.of(TestUtils.buildAppleWithOffer(new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusDays(3), LocalDate.now().plusDays(3)))))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("apple"));
 
         assertEquals(25, supermarketService.checkout(List.of("apple", "apple", "apple")));
@@ -63,8 +63,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_itemsOnOffer_moreItemsThanOffer() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0,
-                new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusDays(3), LocalDate.now().plusDays(3)))))
+        doReturn(List.of(TestUtils.buildAppleWithOffer(new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusDays(3), LocalDate.now().plusDays(3)))))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("apple"));
 
         assertEquals(35, supermarketService.checkout(List.of("apple", "apple", "apple", "apple")));
@@ -72,8 +71,7 @@ class SupermarketServiceTest {
 
     @Test
     void checkout_itemsOnOffer_offerNotValidNow() {
-        doReturn(List.of(new Item(UUID.randomUUID(), "Apple", 10.0,
-                new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusMonths(1), LocalDate.now().minusWeeks(1)))))
+        doReturn(List.of(TestUtils.buildAppleWithOffer(new Offer(UUID.randomUUID(), 25.0, 3, LocalDate.now().minusMonths(1), LocalDate.now().minusWeeks(1)))))
                 .when(itemRepository).findAllByNameInIgnoreCase(List.of("apple"));
 
         assertEquals(30, supermarketService.checkout(List.of("apple", "apple", "apple")));

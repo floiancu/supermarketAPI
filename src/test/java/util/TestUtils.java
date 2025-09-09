@@ -1,13 +1,16 @@
 package util;
 
 import com.supermarket.dto.ItemRequest;
+import com.supermarket.model.Item;
+import com.supermarket.model.Offer;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class TestUtils {
 
     public static ItemRequest buildItemRequestWithAllFields() {
-        return new ItemRequest("Apple", 20.0, 2, 15.0,
+        return new ItemRequest("Apple", 10.0, 2, 15.0,
                 LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 7));
     }
 
@@ -21,6 +24,14 @@ public class TestUtils {
     }
 
     public static ItemRequest buildItemRequestWithOfferFields(Integer offerQuantity, Double offerPrice, LocalDate offerStartDate, LocalDate offerEndDate) {
-        return new ItemRequest("Apple", 20.0, offerQuantity, offerPrice, offerStartDate, offerEndDate);
+        return new ItemRequest("Apple", 10.0, offerQuantity, offerPrice, offerStartDate, offerEndDate);
+    }
+
+    public static Item buildApple() {
+        return new Item(UUID.randomUUID(), "Apple", 10.0, null);
+    }
+
+    public static Item buildAppleWithOffer(Offer offer) {
+        return new Item(UUID.randomUUID(), "Apple", 10.0, offer);
     }
 }
