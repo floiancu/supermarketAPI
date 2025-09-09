@@ -16,7 +16,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/admin/item/kiwi",
+					"raw": "localhost:8080/admin/item/apple",
 					"host": [
 						"localhost"
 					],
@@ -24,7 +24,7 @@
 					"path": [
 						"admin",
 						"item",
-						"kiwi"
+						"apple"
 					]
 				}
 			},
@@ -71,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"name\": \"Kiwi\",\r\n        \"price\": 25,\r\n        \"offerQuantity\": 3,\r\n        \"offerPrice\": 65,\r\n        \"offerStartDate\": \"2025-09-01\",\r\n        \"offerEndDate\": \"2025-09-07\"\r\n    }\r\n]",
+					"raw": "[\r\n    {\r\n        \"name\": \"Kiwi\",\r\n        \"price\": 25,\r\n        \"offerQuantity\": 3,\r\n        \"offerPrice\": 65,\r\n        \"offerStartDate\": \"2025-09-01\",\r\n        \"offerEndDate\": \"2025-09-07\"\r\n    },\r\n    {   \r\n        \"name\": \"Avocado\",\r\n        \"price\": 39.9,\r\n        \"offerQuantity\": 2,\r\n        \"offerPrice\": 69.9,\r\n        \"offerStartDate\": \"2025-10-01\",\r\n        \"offerEndDate\": \"2025-10-07\"\r\n    }\r\n]",
 					"options": {
 						"raw": {
 							"language": "json"
