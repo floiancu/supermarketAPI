@@ -16,11 +16,13 @@ public interface ItemMapper {
     @Mapping(target = "offer", expression = "java(mapOffer(itemRequest))")
     Item map(ItemRequest itemRequest);
 
-    @Mapping(target = "quantity", source = "itemRequest.offerQuantity")
-    @Mapping(target = "price", source = "itemRequest.offerPrice")
-    @Mapping(target = "startDate", source = "itemRequest.offerStartDate")
-    @Mapping(target = "endDate", source = "itemRequest.offerEndDate")
-    Offer mapOffer(ItemRequest itemRequest);
+    default Offer mapOffer(ItemRequest itemRequest){
+        if(itemRequest.offerPrice() == null || itemRequest.offerQuantity() == null ||
+                itemRequest.offerStartDate() == null || itemRequest.offerEndDate() == null) {
+            return null;
+        }
+        return new Offer(itemRequest.offerPrice(), itemRequest.offerQuantity(), itemRequest.offerStartDate(), itemRequest.offerEndDate());
+    }
 
     ItemResponse toDto(Item item);
 

@@ -5,6 +5,7 @@ import com.supermarket.dto.ItemRequest;
 import com.supermarket.dto.ItemResponse;
 import com.supermarket.service.AdminService;
 import com.supermarket.util.ItemMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,8 @@ public class AdminController {
     }
 
     @PostMapping("/item")
-    ResponseEntity<AddItemResponse> addItems(@RequestBody List<ItemRequest> itemRequestList){
+    ResponseEntity<AddItemResponse> addItems(@Valid @RequestBody List<ItemRequest> itemRequestList){
+
         return ResponseEntity.ok(new AddItemResponse(this.adminService.addItems(itemRequestList).size()));
     }
 }

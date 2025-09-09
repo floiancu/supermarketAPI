@@ -2,6 +2,7 @@ package com.supermarket.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "Offers")
 @Data
+@NoArgsConstructor
 public class Offer {
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
@@ -17,4 +19,11 @@ public class Offer {
         int quantity;
         LocalDate startDate;
         LocalDate endDate;
+
+        public Offer(Double price, int quantity, LocalDate startDate, LocalDate endDate) {
+                this.price = price;
+                this.quantity = quantity;
+                this.startDate = startDate;
+                this.endDate = endDate;
+        }
 }
