@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "a9db39cd-d64c-4d22-9782-1ff87c523ad6",
+		"name": "Supermarket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48290723",
+		"_collection_link": "https://floiancu-2782651.postman.co/workspace/Florian-Iancu's-Workspace~f3cfb2be-7425-4c67-885c-5677fe6bc253/collection/48290723-a9db39cd-d64c-4d22-9782-1ff87c523ad6?action=share&source=collection_link&creator=48290723"
+	},
+	"item": [
+		{
+			"name": "Admin get item",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/item/kiwi",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"item",
+						"kiwi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\"apple\",\"banana\"]"
+				},
+				"url": {
+					"raw": "localhost:8080/checkout",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin add item",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"name\": \"Kiwi\",\r\n        \"price\": 25,\r\n        \"offerQuantity\": 3,\r\n        \"offerPrice\": 65,\r\n        \"offerStartDate\": \"2025-09-01\",\r\n        \"offerEndDate\": \"2025-09-07\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/item",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"item"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
