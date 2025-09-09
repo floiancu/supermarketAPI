@@ -76,12 +76,46 @@ class AdminControllerTest {
     }
 
     @Test
-    void addItems_wheItemNameDuplicate_badRequest(){
+    void addItems_whenItemNameDuplicate_badRequest(){
         webTestClient.post()
                 .uri("/item")
                 .bodyValue(List.of(TestUtils.buildItemRequestWithAllFields()))
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void updateItem_whenRequestValid_ok(){
+        webTestClient.put()
+                .uri("/item/0fe10956-ed17-4ac9-a1de-ef55417c362d")
+                .bodyValue(TestUtils.buildBananaItemRequestWithAllFields())
+                .exchange()
+                .expectStatus().isOk();
+        ItemResponse result = webTestClient.get()
+                .uri("/item/banana")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ItemResponse.class)
+                .returnResult()
+                .getResponseBody();
+        assertEquals("Banana", result.name());
+        assertEquals(25, result.price());
+        assertNotNull(result.offer());
+        assertEquals(2, result.offer().quantity());
+        assertEquals(15, result.offer().price());
+        assertEquals(LocalDate.of(2025, 9, 1), result.offer().startDate());
+        assertEquals(LocalDate.of(2025, 9, 7), result.offer().endDate());
+    }
+
+    @Test
+    void updateItem_whenNamesDoNotMatch_badRequest(){
+        String errorMessage = webTestClient.put()
+                .uri("/item/259a8a6b-ddea-491e-85e9-a6ec4511ad9f")
+                .bodyValue(TestUtils.buildItemRequestWithoutOffer())
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).returnResult().getResponseBody();
+        assertTrue(errorMessage.contains("Names do not match for item with ID:"));
     }
 
     @Test

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,17 @@ public class AdminService {
             throw new SupermarketException(String.format("Duplicate item(s): %s.", existingItems.stream().map(Item::getName).collect(Collectors.joining(", "))));
         }
         return itemRepository.saveAll(itemRequestList.stream().map(itemMapper::map).toList());
+    }
+
+    public void updateItem(UUID id, ItemRequest itemRequest) {
+        if(!ItemRequestValidator.validateItemRequest(itemRequest)){
+            throw new SupermarketException("Invalid offer fields.");
+        }
+        Item item = itemRepository.findById(id).orElseThrow(() -> new SupermarketException(String.format("No item found with ID: %s",id)));
+        if(!item.getName().equals(itemRequest.name())) {
+            throw new SupermarketException(String.format("Names do not match for item with ID: %s", id));
+        }
+        itemRepository.save(itemMapper.map(id, itemRequest));
     }
 
     public Item getItem(String name) {

@@ -21,7 +21,7 @@ public class ItemRequestValidator {
         }
     }
 
-    private static boolean validateItemRequest(ItemRequest itemRequest) {
+    public static boolean validateItemRequest(ItemRequest itemRequest) {
         return (itemRequest.offerPrice() == null && itemRequest.offerQuantity() == null &&
                 itemRequest.offerStartDate() == null && itemRequest.offerEndDate() == null) ||
                 (itemRequest.offerPrice() != null && itemRequest.offerQuantity() != null &&

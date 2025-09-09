@@ -8,6 +8,8 @@ import com.supermarket.model.Offer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.UUID;
+
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
 
@@ -15,6 +17,12 @@ public interface ItemMapper {
     @Mapping(target = "price", source = "itemRequest.price")
     @Mapping(target = "offer", expression = "java(mapOffer(itemRequest))")
     Item map(ItemRequest itemRequest);
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "itemRequest.name")
+    @Mapping(target = "price", source = "itemRequest.price")
+    @Mapping(target = "offer", expression = "java(mapOffer(itemRequest))")
+    Item map(UUID id, ItemRequest itemRequest);
 
     default Offer mapOffer(ItemRequest itemRequest){
         if(itemRequest.offerPrice() == null || itemRequest.offerQuantity() == null ||

@@ -14,6 +14,11 @@ public class TestUtils {
                 LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 7));
     }
 
+    public static ItemRequest buildBananaItemRequestWithAllFields() {
+        return new ItemRequest("Banana", 25.0, 2, 15.0,
+                LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 7));
+    }
+
     public static ItemRequest buildItemRequestWithPrice(Double price) {
         return new ItemRequest("Apple", price, 2, 15.0,
                 LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 7));

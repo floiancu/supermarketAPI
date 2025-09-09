@@ -15,6 +15,8 @@ import util.TestUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,7 +32,9 @@ class AdminServiceTest {
     @Spy
     private ItemMapper itemMapper = new ItemMapperImpl();
     @Captor
-    private ArgumentCaptor<List<Item>> itemArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    private ArgumentCaptor<List<Item>> itemListArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    @Captor
+    private ArgumentCaptor<Item> itemArgumentCaptor = ArgumentCaptor.forClass(Item.class);
 
     @Test
     void addItem_whenItemValid() {
@@ -39,8 +43,8 @@ class AdminServiceTest {
         ItemRequest itemRequest = TestUtils.buildItemRequestWithAllFields();
         adminService.addItems(List.of(itemRequest));
 
-        verify(itemRepository).saveAll(itemArgumentCaptor.capture());
-        List<Item> capturedItems = itemArgumentCaptor.getValue();
+        verify(itemRepository).saveAll(itemListArgumentCaptor.capture());
+        List<Item> capturedItems = itemListArgumentCaptor.getValue();
         assertEquals(1, capturedItems.size());
         assertEquals(itemRequest.name(), capturedItems.get(0).getName());
         assertEquals(itemRequest.price(), capturedItems.get(0).getPrice());
@@ -67,6 +71,55 @@ class AdminServiceTest {
         SupermarketException supermarketException = assertThrows(SupermarketException.class, () -> adminService.addItems(List.of(itemRequest)));
         assertEquals("Apple: invalid offer fields.", supermarketException.getMessage());
         verify(itemRepository, never()).saveAll(any());
+    }
+
+    @Test
+    void updateItem_whenItemRequestValid() {
+        Item item = TestUtils.buildApple();
+        doReturn(Optional.of(item)).when(itemRepository).findById(any());
+        ItemRequest itemRequest = TestUtils.buildItemRequestWithAllFields();
+
+        adminService.updateItem(item.getId(), itemRequest);
+        verify(itemRepository).save(itemArgumentCaptor.capture());
+        Item capturedItem = itemArgumentCaptor.getValue();
+        assertEquals(itemRequest.name(), capturedItem.getName());
+        assertEquals(itemRequest.price(), capturedItem.getPrice());
+        assertEquals(itemRequest.offerQuantity(), capturedItem.getOffer().getQuantity());
+        assertEquals(itemRequest.offerPrice(), capturedItem.getOffer().getPrice());
+        assertEquals(itemRequest.offerStartDate(), capturedItem.getOffer().getStartDate());
+        assertEquals(itemRequest.offerEndDate(), capturedItem.getOffer().getEndDate());
+    }
+
+    @Test
+    void updateItem_whenItemIdDoesNotExist() {
+        doReturn(Optional.empty()).when(itemRepository).findById(any());
+        ItemRequest itemRequest = TestUtils.buildItemRequestWithAllFields();
+        UUID id = UUID.randomUUID();
+
+        SupermarketException supermarketException = assertThrows(SupermarketException.class, () -> adminService.updateItem(id, itemRequest));
+        assertEquals("No item found with ID: " + id, supermarketException.getMessage());
+        verify(itemRepository, never()).save(any());
+    }
+
+    @Test
+    void updateItem_whenItemRequestInvalid() {
+        ItemRequest itemRequest = TestUtils.buildItemRequestWithOfferFields(2, 20.0, null, null);
+        UUID id = UUID.randomUUID();
+
+        SupermarketException supermarketException = assertThrows(SupermarketException.class, () -> adminService.updateItem(id, itemRequest));
+        assertEquals("Invalid offer fields.", supermarketException.getMessage());
+        verify(itemRepository, never()).save(any());
+    }
+
+    @Test
+    void updateItem_whenItemNamesDoNotMatch() {
+        doReturn(Optional.of(TestUtils.buildApple())).when(itemRepository).findById(any());
+        ItemRequest itemRequest = TestUtils.buildItemRequestWithoutOffer();
+        UUID id = UUID.randomUUID();
+
+        SupermarketException supermarketException = assertThrows(SupermarketException.class, () -> adminService.updateItem(id, itemRequest));
+        assertEquals("Names do not match for item with ID: " + id, supermarketException.getMessage());
+        verify(itemRepository, never()).save(any());
     }
 
     @Test

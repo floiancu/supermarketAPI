@@ -20,10 +20,10 @@ class ClientControllerTest {
     void checkout_whenItemsExist_ok(){
         webTestClient.post()
                 .uri("/checkout")
-                .bodyValue(List.of("apple", "banana"))
+                .bodyValue(List.of("apple", "peach"))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(CheckoutResponse.class).isEqualTo(new CheckoutResponse(40));
+                .expectBody(CheckoutResponse.class).isEqualTo(new CheckoutResponse(30));
     }
 
     @Test
