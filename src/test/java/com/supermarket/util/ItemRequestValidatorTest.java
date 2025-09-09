@@ -57,6 +57,22 @@ class ItemRequestValidatorTest {
     }
 
     @Test
+    void validate_nullOfferEndDateSameAsStartDate_error() {
+        SupermarketException supermarketException = assertThrows(SupermarketException.class,
+                () -> ItemRequestValidator.validate(List.of(TestUtils.buildItemRequestWithOfferFields(3, 15.0,
+                        LocalDate.now(), LocalDate.now()))));
+        assertEquals("Apple" + ItemRequestValidator.OFFER_ERROR_MESSAGE, supermarketException.getMessage());
+    }
+
+    @Test
+    void validate_nullOfferEndDateBeforeStartDate_error() {
+        SupermarketException supermarketException = assertThrows(SupermarketException.class,
+                () -> ItemRequestValidator.validate(List.of(TestUtils.buildItemRequestWithOfferFields(3, 15.0,
+                        LocalDate.now(), LocalDate.now().minusDays(1)))));
+        assertEquals("Apple" + ItemRequestValidator.OFFER_ERROR_MESSAGE, supermarketException.getMessage());
+    }
+
+    @Test
     void validate_oneValidAndOneInvalidItem_error() {
         SupermarketException supermarketException = assertThrows(SupermarketException.class,
                 () -> ItemRequestValidator.validate(List.of(
@@ -65,4 +81,6 @@ class ItemRequestValidatorTest {
                         LocalDate.of(2025, 9, 1), LocalDate.of(2025, 9, 7)))));
         assertEquals("Apple" + ItemRequestValidator.OFFER_ERROR_MESSAGE, supermarketException.getMessage());
     }
+
+
 }

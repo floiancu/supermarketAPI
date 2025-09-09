@@ -26,6 +26,7 @@ public class ItemRequestValidator {
                 itemRequest.offerStartDate() == null && itemRequest.offerEndDate() == null) ||
                 (itemRequest.offerPrice() != null && itemRequest.offerQuantity() != null &&
                 itemRequest.offerStartDate() != null && itemRequest.offerEndDate() != null &&
-                itemRequest.price() > 0 && itemRequest.offerQuantity() > 1);
+                itemRequest.offerPrice() > 0 && itemRequest.offerQuantity() > 1 &&
+                itemRequest.offerEndDate().isAfter(itemRequest.offerStartDate()));
     }
 }
